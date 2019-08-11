@@ -28,7 +28,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/nuevo", name="product_new", methods={"GET","POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function new(Request $request): Response
     {
@@ -64,7 +64,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}/editar", name="product_edit", methods={"GET","POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_SUPER_ADMIN")
      */
     public function edit(Request $request, Product $product): Response
     {
@@ -77,6 +77,7 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('product_index');
         }
 
+        
         return $this->render('product/edit.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
