@@ -23,6 +23,7 @@ class ProductType extends AbstractType
                 'class' => category::class,
                 'choice_label' => 'name'
             ])
+            ->add('imageFile', VichImageType::class)
         ;
     }
 

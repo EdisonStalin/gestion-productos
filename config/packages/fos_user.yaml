@@ -5,3 +5,8 @@ fos_user:
     from_email:
         address: "edisonsjumbo@gmail.com"
         sender_name: "Edison Jumbo"
+    registration:
+        form:
+            type: App\Form\RegistrationType
+        confirmation:
+            enabled: true

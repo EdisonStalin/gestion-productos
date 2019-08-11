@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 /**
  * @Route("/producto")
  */
@@ -17,6 +17,7 @@ class ProductController extends AbstractController
 {
     /**
      * @Route("/", name="product_index", methods={"GET"})
+     * 
      */
     public function index(ProductRepository $productRepository): Response
     {
@@ -27,6 +28,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/nuevo", name="product_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request): Response
     {
@@ -36,6 +38,7 @@ class ProductController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $product->setUser($this->getUser());
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -50,6 +53,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}", name="product_show", methods={"GET"})
+     * @IsGranted("ROLE_USER")
      */
     public function show(Product $product): Response
     {
@@ -60,6 +64,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}/editar", name="product_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, Product $product): Response
     {
@@ -80,6 +85,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}", name="product_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Product $product): Response
     {
