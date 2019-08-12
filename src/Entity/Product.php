@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -144,6 +146,16 @@ class Product
     private $updatedAt;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Buy", mappedBy="product")
+     */
+    private $buys;
+
+    public function __construct()
+    {
+        $this->buys = new ArrayCollection();
+    }
+
+    /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the update. If this
      * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
@@ -186,5 +198,36 @@ class Product
     public function getImageSize(): ?int
     {
         return $this->imageSize;
+    }
+
+    /**
+     * @return Collection|Buy[]
+     */
+    public function getBuys(): Collection
+    {
+        return $this->buys;
+    }
+
+    public function addBuy(Buy $buy): self
+    {
+        if (!$this->buys->contains($buy)) {
+            $this->buys[] = $buy;
+            $buy->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuy(Buy $buy): self
+    {
+        if ($this->buys->contains($buy)) {
+            $this->buys->removeElement($buy);
+            // set the owning side to null (unless already changed)
+            if ($buy->getProduct() === $this) {
+                $buy->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

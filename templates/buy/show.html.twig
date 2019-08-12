@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Buy{% endblock %}
+
+{% block body %}
+    <h1>Buy</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ buy.id }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ buy.date ? buy.date|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('buy_index') }}">back to list</a>
+
+    <a href="{{ path('buy_edit', {'id': buy.id}) }}">edit</a>
+
+    {{ include('buy/_delete_form.html.twig') }}
+{% endblock %}

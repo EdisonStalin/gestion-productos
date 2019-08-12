@@ -37,10 +37,16 @@ class User extends BaseUser
      */
     private $products;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Buy", mappedBy="user")
+     */
+    private $buys;
+
     public function __construct()
     {
         parent::__construct();
         $this->products = new ArrayCollection();
+        $this->buys = new ArrayCollection();
         // your own logic
     }
 
@@ -93,6 +99,37 @@ class User extends BaseUser
             // set the owning side to null (unless already changed)
             if ($product->getUser() === $this) {
                 $product->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Buy[]
+     */
+    public function getBuys(): Collection
+    {
+        return $this->buys;
+    }
+
+    public function addBuy(Buy $buy): self
+    {
+        if (!$this->buys->contains($buy)) {
+            $this->buys[] = $buy;
+            $buy->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuy(Buy $buy): self
+    {
+        if ($this->buys->contains($buy)) {
+            $this->buys->removeElement($buy);
+            // set the owning side to null (unless already changed)
+            if ($buy->getUser() === $this) {
+                $buy->setUser(null);
             }
         }
 
